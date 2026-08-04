@@ -43,3 +43,48 @@ export default function MathPlayground() {
   const answer = (opt: number) => {
     if (selected !== null) return;
     setSelected(opt);
+    setTotal(t => t + 1);
+    if (opt === q.answer) {
+      setScore(s => s + 1);
+      setStreak(s => s + 1);
+    } else {
+      setStreak(0);
+    }
+    setTimeout(next, 1200);
+  };
+
+  useEffect(() => { setQ(generateQuestion(op, level)); setSelected(null); }, [op, level]);
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(245,158,11,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🔢</div>
+        <div>
+          <div className="tool-page-title">Math Playground</div>
+          <div className="tool-page-desc">Fun math challenges for young minds!</div>
+        </div>
+        <div style={{ marginLeft: 'auto', display: 'flex', gap: 10 }}>
+          <select className="form-select" value={level} onChange={e => setLevel(e.target.value as Level)}>
+            <option value="easy">😊 Easy</option>
+            <option value="medium">🤔 Medium</option>
+            <option value="hard">🔥 Hard</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Operation Selector */}
+      <div className="tab-bar mb-6" style={{ maxWidth: 400 }}>
+        {(['+', '-', '×', '÷'] as Op[]).map(o => (
+          <button key={o} className={`tab-item${op === o ? ' active' : ''}`} onClick={() => setOp(o)} style={{ fontSize: 18 }}>{o}</button>
+        ))}
+      </div>
+
+      {/* Score */}
+      <div className="dashboard-stats mb-6" style={{ maxWidth: 500 }}>
+        <div className="stat-card" style={{ textAlign: 'center' }}>
+          <div className="stat-label">Score</div>
+          <div className="math-score" style={{ fontSize: 32 }}>{score}</div>
+        </div>
+        <div className="stat-card" style={{ textAlign: 'center' }}>
+          <div className="stat-label">Total</div>
+          <div className="math-score" style={{ fontSize: 32 }}>{total}</div>
