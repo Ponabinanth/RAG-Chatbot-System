@@ -108,3 +108,58 @@ export default function SpellingBee() {
               style={{ textAlign: 'center', fontSize: 18, color: 'var(--text-secondary)' }}
             >
               {current.hint}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Input */}
+        {!result && (
+          <div style={{ display: 'flex', gap: 10 }}>
+            <input
+              className="form-input"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && check()}
+              placeholder="Type your answer…"
+              maxLength={current.word.length}
+              style={{ fontSize: 18, textAlign: 'center', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+              autoFocus
+            />
+            <button className="btn btn-primary" onClick={check}>Check ✓</button>
+          </div>
+        )}
+
+        {/* Result */}
+        <AnimatePresence>
+          {result && (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="card"
+              style={{ textAlign: 'center', background: result === 'correct' ? 'rgba(52,211,153,0.1)' : 'rgba(248,113,113,0.1)', borderColor: result === 'correct' ? '#34d399' : '#f87171' }}
+            >
+              <div style={{ fontSize: 48, marginBottom: 8 }}>{result === 'correct' ? '🎉' : '😅'}</div>
+              <div style={{ fontWeight: 700, color: result === 'correct' ? '#34d399' : '#f87171', fontSize: 18 }}>
+                {result === 'correct' ? 'Correct! Well done!' : `It's spelled: ${current.word}`}
+              </div>
+              <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={next}>
+                Next Word →
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Controls */}
+        {!result && (
+          <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
+            <button className="btn btn-secondary btn-sm" onClick={() => setShowHint(h => !h)}>
+              {showHint ? '🙈 Hide Hint' : '💡 Show Hint'}
+            </button>
+            <button className="btn btn-ghost btn-sm" onClick={next}>Skip →</button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
