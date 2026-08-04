@@ -85,3 +85,47 @@ export default function MeetingNotes() {
         </div>
       </div>
 
+      <div className="grid-2">
+        <div>
+          <div className="form-group mb-4">
+            <label className="form-label">Raw Meeting Notes</label>
+            <textarea
+              className="form-textarea"
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              rows={20}
+              placeholder="Paste your meeting notes here…"
+            />
+          </div>
+          <button className="btn btn-primary w-full" onClick={generate} disabled={loading || !notes.trim()}>
+            {loading ? <><span className="spinner" /> Summarizing…</> : '✨ Generate Summary'}
+          </button>
+        </div>
+
+        <div>
+          {summary ? (
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex justify-between items-center mb-4">
+                <div className="section-title" style={{ margin: 0 }}>📋 Summary</div>
+                <button className="btn btn-secondary btn-sm" onClick={copy}>
+                  {copied ? '✓ Copied!' : '📋 Copy'}
+                </button>
+              </div>
+              <div className="summary-output" style={{ whiteSpace: 'pre-wrap', minHeight: 400 }}>
+                {summary}
+              </div>
+            </motion.div>
+          ) : (
+            <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>📝</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center' }}>
+                Paste your meeting notes on the left and click "Generate Summary"
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
