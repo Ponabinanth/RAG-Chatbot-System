@@ -90,3 +90,50 @@ export default function StoryCreator() {
                 </div>
                 <div className="tool-card-badge" style={{ background: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}>
                   Start Story →
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+            <span style={{ fontSize: 32 }}>{chosen.emoji}</span>
+            <span style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700 }}>
+              {chosen.theme} Adventure
+            </span>
+          </div>
+
+          <div className="story-output" style={{ marginBottom: 24 }}>
+            {parts.map((part, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                style={{ marginBottom: i < parts.length - 1 ? 20 : 0 }}
+              >
+                {part}
+              </motion.p>
+            ))}
+            {loading && (
+              <div className="typing-dots" style={{ marginTop: 16 }}><span /><span /><span /></div>
+            )}
+          </div>
+
+          {!done ? (
+            <button className="btn btn-primary" onClick={continueStory} disabled={loading}>
+              {loading ? <><span className="spinner" /> Writing…</> : '✨ Continue Story →'}
+            </button>
+          ) : (
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="card" style={{ textAlign: 'center', background: 'rgba(245,158,11,0.1)', borderColor: '#f59e0b' }}>
+              <div style={{ fontSize: 48, marginBottom: 8 }}>🎊</div>
+              <div style={{ fontWeight: 700, color: '#fbbf24', fontSize: 18 }}>The End! Great story!</div>
+              <button className="btn btn-secondary btn-sm" style={{ marginTop: 12 }} onClick={reset}>Create Another Story</button>
+            </motion.div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
