@@ -90,3 +90,50 @@ export default function PomodoroTimer() {
             />
           </svg>
           <div className="pomodoro-time">
+            <div className="pomodoro-time-display">{mm}:{ss}</div>
+            <div className="pomodoro-time-label">{PHASES[phase].label}</div>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="pomodoro-controls">
+          <button className="btn btn-secondary" onClick={reset}>↺ Reset</button>
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={() => setRunning(r => !r)}
+            style={{ minWidth: 120 }}
+          >
+            {running ? '⏸ Pause' : '▶ Start'}
+          </button>
+          <button className="btn btn-secondary" onClick={() => setPhase(p => p === 'focus' ? 'break' : 'focus')}>
+            ⏭ Skip
+          </button>
+        </div>
+
+        {/* Stats */}
+        <div className="dashboard-stats" style={{ maxWidth: 500, width: '100%' }}>
+          <div className="stat-card" style={{ textAlign: 'center' }}>
+            <div className="stat-label">Sessions Today</div>
+            <div className="stat-value">{sessions}</div>
+          </div>
+          <div className="stat-card" style={{ textAlign: 'center' }}>
+            <div className="stat-label">Focus Time (min)</div>
+            <div className="stat-value">{totalFocus}</div>
+          </div>
+          <div className="stat-card" style={{ textAlign: 'center' }}>
+            <div className="stat-label">Next Break</div>
+            <div className="stat-value" style={{ fontSize: 16 }}>{sessions > 0 && sessions % 4 === 0 ? 'Long' : 'Short'}</div>
+          </div>
+        </div>
+
+        {/* Tips */}
+        <div className="card" style={{ maxWidth: 500, width: '100%', textAlign: 'center', background: 'rgba(108,99,255,0.05)', borderColor: 'rgba(108,99,255,0.15)' }}>
+          <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+            💡 <strong>Pomodoro Technique:</strong> Work for 25 min, break for 5 min. After 4 sessions, take a 15-minute long break.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
