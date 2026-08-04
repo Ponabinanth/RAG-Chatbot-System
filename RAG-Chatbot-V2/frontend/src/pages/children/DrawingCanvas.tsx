@@ -48,3 +48,54 @@ export default function DrawingCanvas() {
     ctx.beginPath();
     ctx.moveTo(lastPos.current!.x, lastPos.current!.y);
     ctx.lineTo(pos.x, pos.y);
+    ctx.strokeStyle = tool === 'eraser' ? '#ffffff' : color;
+    ctx.lineWidth = tool === 'eraser' ? size * 3 : size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    lastPos.current = pos;
+  };
+
+  const stopDraw = () => { setDrawing(false); lastPos.current = null; };
+
+  const clearCanvas = () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!ctx || !canvas) return;
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  };
+
+  const saveCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const link = document.createElement('a');
+    link.download = 'my-drawing.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  };
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(236,72,153,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🎨</div>
+        <div>
+          <div className="tool-page-title">Drawing Canvas</div>
+          <div className="tool-page-desc">Express yourself with colors and creativity!</div>
+        </div>
+      </div>
+
+      <div className="canvas-wrap">
+        {/* Toolbar */}
+        <div className="canvas-tools">
+          {/* Colors */}
+          {COLORS.map(c => (
+            <div
+              key={c}
+              className={`color-swatch${color === c && tool === 'pen' ? ' active' : ''}`}
+              style={{ background: c, border: c === '#ffffff' ? '2px solid var(--border-default)' : '3px solid transparent' }}
+              onClick={() => { setColor(c); setTool('pen'); }}
+            />
+          ))}
+
+          <div style={{ width: 1, height: 32, background: 'var(--border-subtle)', margin: '0 4px' }} />
