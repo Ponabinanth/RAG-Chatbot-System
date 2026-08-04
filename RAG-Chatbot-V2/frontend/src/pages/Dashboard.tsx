@@ -96,3 +96,52 @@ export default function Dashboard() {
         </div>
         <div className="stat-card">
           <div className="stat-label">Status</div>
+          <div className="stat-value" style={{ fontSize: 16, color: '#34d399' }}>✓ Active</div>
+        </div>
+      </div>
+
+      {/* Tools Grid */}
+      <div className="tools-section">
+        <div className="tools-section-title">
+          <span>Your Tools</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)', fontWeight: 400 }}>{tools.length} available</span>
+        </div>
+        <div className="tools-grid">
+          {tools.map((tool, i) => (
+            <ToolCard key={tool.path} tool={tool} delay={i * 0.06} />
+          ))}
+        </div>
+      </div>
+
+      {/* Quick Start Banner */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        style={{
+          background: 'var(--gradient-brand)',
+          borderRadius: 'var(--radius-xl)',
+          padding: '28px 32px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 24,
+          flexWrap: 'wrap',
+        }}
+      >
+        <div>
+          <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: 'white', marginBottom: 4 }}>
+            🚀 Ready to get started?
+          </div>
+          <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>
+            Pick any tool above and start learning or working smarter today.
+          </div>
+        </div>
+        <Link to={tools[0].path} className="btn" style={{ background: 'white', color: '#6c63ff', fontWeight: 700, flexShrink: 0 }}>
+          {tools[0].icon} Open {tools[0].title}
+        </Link>
+      </motion.div>
+    </div>
+  );
+}
+
