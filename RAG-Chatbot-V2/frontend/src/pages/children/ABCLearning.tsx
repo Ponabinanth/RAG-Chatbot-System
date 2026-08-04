@@ -114,3 +114,61 @@ export default function ABCLearning() {
                 <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', marginTop: 8 }}>
                   Sound: "{selected.sound}"
                 </div>
+              </div>
+              <div style={{ textAlign: 'center', marginTop: 16, color: 'var(--text-muted)', fontSize: 13 }}>
+                {selected.letter} is for {selected.word}! {selected.emoji}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      ) : (
+        <div style={{ maxWidth: 500, margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24, fontSize: 15, fontWeight: 700 }}>
+            <span>Question {quizIndex + 1}</span>
+            <span>⭐ {quizScore}/{quizTotal}</span>
+          </div>
+
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={quizIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              style={{ textAlign: 'center', marginBottom: 32 }}
+            >
+              <div style={{ fontSize: 80, marginBottom: 8 }}>{quizItem.emoji}</div>
+              <div style={{ fontSize: 15, color: 'var(--text-secondary)' }}>What word does this picture show?</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--brand-primary-light)', marginTop: 8 }}>
+                Starts with: {quizItem.letter}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {!quizResult ? (
+            <div style={{ display: 'flex', gap: 10 }}>
+              <input
+                className="form-input"
+                value={quizInput}
+                onChange={e => setQuizInput(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && checkQuiz()}
+                placeholder="Type the word…"
+                style={{ fontSize: 18, textAlign: 'center' }}
+                autoFocus
+              />
+              <button className="btn btn-primary" onClick={checkQuiz}>Go! ✓</button>
+            </div>
+          ) : (
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} className="card" style={{ textAlign: 'center', background: quizResult === 'correct' ? 'rgba(52,211,153,0.1)' : 'rgba(248,113,113,0.1)' }}>
+              <div style={{ fontSize: 48 }}>{quizResult === 'correct' ? '🎉' : '😅'}</div>
+              <div style={{ fontWeight: 700, fontSize: 16, marginTop: 8, color: quizResult === 'correct' ? '#34d399' : '#f87171' }}>
+                {quizResult === 'correct' ? 'Correct! 🌟' : `The answer is: ${quizItem.word}`}
+              </div>
+              <button className="btn btn-primary" style={{ marginTop: 12 }} onClick={nextQuiz}>Next →</button>
+            </motion.div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
