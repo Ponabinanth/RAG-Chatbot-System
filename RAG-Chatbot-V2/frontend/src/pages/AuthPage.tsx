@@ -138,3 +138,74 @@ export default function AuthPage() {
                   className="auth-input" placeholder="Your name"
                   required={mode === 'signup'}
                 />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div>
+            <label className="auth-label" htmlFor="email">Email address</label>
+            <input
+              id="email" type="email" value={email}
+              onChange={e => setEmail(e.target.value)}
+              className="auth-input" placeholder="name@example.com"
+              required autoComplete="email"
+            />
+          </div>
+
+          <div>
+            <label className="auth-label" htmlFor="password">Password</label>
+            <input
+              id="password" type="password" value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="auth-input" placeholder="Min. 6 characters" required
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
+            />
+          </div>
+
+          <AnimatePresence>
+            {mode === 'signup' && (
+              <motion.div
+                key="confirm"
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                style={{ overflow: 'hidden' }}
+              >
+                <label className="auth-label" htmlFor="confirm">Confirm Password</label>
+                <input
+                  id="confirm" type="password" value={confirm}
+                  onChange={e => setConfirm(e.target.value)}
+                  className="auth-input" placeholder="••••••••"
+                  required autoComplete="new-password"
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <button type="submit" disabled={loading} className="auth-btn">
+            {loading && <span className="spinner" />}
+            {loading
+              ? (mode === 'login' ? 'Signing in…' : 'Creating account…')
+              : (mode === 'login' ? '→ Sign In' : '→ Create Account')}
+          </button>
+        </form>
+
+        <div className="auth-switch" style={{ marginTop: 20 }}>
+          {mode === 'login' ? (
+            <>Don't have an account? <button onClick={switchMode}>Sign up free</button></>
+          ) : (
+            <>Already have an account? <button onClick={switchMode}>Sign in</button></>
+          )}
+        </div>
+
+        {isMockMode && (
+          <p style={{ textAlign: 'center', fontSize: 11, color: 'var(--text-muted)', marginTop: 20, lineHeight: 1.5 }}>
+            🔒 All data is stored locally in your browser.
+            <br/>Add Supabase credentials to enable cloud auth & sync.
+          </p>
+        )}
+      </motion.div>
+    </div>
+  );
+}
+
