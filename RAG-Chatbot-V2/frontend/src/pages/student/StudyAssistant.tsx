@@ -74,3 +74,42 @@ export default function StudyAssistant() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
             >
+              <div className="chat-avatar" style={{ background: msg.role === 'user' ? 'var(--gradient-brand)' : 'var(--bg-elevated)' }}>
+                {msg.role === 'user' ? '👤' : '🤖'}
+              </div>
+              <div className="chat-bubble" style={{ whiteSpace: 'pre-wrap' }}>
+                {msg.content}
+              </div>
+            </motion.div>
+          ))}
+          {loading && (
+            <div className="chat-message assistant">
+              <div className="chat-avatar" style={{ background: 'var(--bg-elevated)' }}>🤖</div>
+              <div className="chat-bubble">
+                <div className="typing-dots"><span /><span /><span /></div>
+              </div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
+
+        <div className="chat-input-area">
+          <div className="chat-input-row">
+            <textarea
+              className="chat-input"
+              placeholder={`Ask about ${subject}…`}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKey}
+              rows={1}
+            />
+            <button className="chat-send-btn" onClick={sendMessage} disabled={loading || !input.trim()}>
+              ➤
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
