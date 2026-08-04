@@ -99,3 +99,54 @@ export default function DrawingCanvas() {
           ))}
 
           <div style={{ width: 1, height: 32, background: 'var(--border-subtle)', margin: '0 4px' }} />
+
+          {/* Brush Sizes */}
+          {SIZES.map(s => (
+            <div
+              key={s}
+              onClick={() => setSize(s)}
+              style={{
+                width: 32, height: 32,
+                borderRadius: '50%',
+                border: `2px solid ${size === s ? 'var(--brand-primary)' : 'var(--border-default)'}`,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: 'pointer',
+                background: size === s ? 'var(--role-student-light)' : 'transparent',
+              }}
+            >
+              <div style={{ width: s, height: s, borderRadius: '50%', background: color }} />
+            </div>
+          ))}
+
+          <div style={{ width: 1, height: 32, background: 'var(--border-subtle)', margin: '0 4px' }} />
+
+          {/* Tools */}
+          <button className={`btn btn-sm ${tool === 'pen' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setTool('pen')}>✏️ Pen</button>
+          <button className={`btn btn-sm ${tool === 'eraser' ? 'btn-primary' : 'btn-secondary'}`} onClick={() => setTool('eraser')}>⬜ Eraser</button>
+          <button className="btn btn-secondary btn-sm" onClick={clearCanvas}>🗑️ Clear</button>
+          <button className="btn btn-primary btn-sm" onClick={saveCanvas}>💾 Save</button>
+        </div>
+
+        {/* Canvas */}
+        <canvas
+          ref={canvasRef}
+          className="canvas-el"
+          width={800}
+          height={500}
+          onMouseDown={startDraw}
+          onMouseMove={draw}
+          onMouseUp={stopDraw}
+          onMouseLeave={stopDraw}
+          onTouchStart={startDraw}
+          onTouchMove={draw}
+          onTouchEnd={stopDraw}
+          style={{ touchAction: 'none' }}
+        />
+        <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+          🖱️ Click and drag to draw · Use touch on mobile
+        </div>
+      </div>
+    </div>
+  );
+}
+
