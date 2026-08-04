@@ -53,3 +53,59 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
+        >
+          ✨ The All-in-One Learning & Productivity Platform
+        </motion.div>
+
+        <motion.h1
+          className="landing-title"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          Learn smarter.<br />
+          <span className="gradient-text">Work faster.</span><br />
+          Grow together.
+        </motion.h1>
+
+        <motion.p
+          className="landing-subtitle"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          EduPro Hub is a powerful all-in-one platform with 18+ tools for students,
+          children, and working professionals — powered by AI.
+        </motion.p>
+
+        <motion.div
+          className="landing-cta-group"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Link to="/auth" className="btn btn-primary btn-lg">Start for Free — No Credit Card</Link>
+          <a href="#features" className="btn btn-secondary btn-lg">See all tools ↓</a>
+        </motion.div>
+
+        {/* Tool pills */}
+        <motion.div
+          style={{ display: 'flex', flexWrap: 'wrap', gap: 10, justifyContent: 'center', marginTop: 48, maxWidth: 700 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          {TOOLS.map((tool, i) => (
+            <motion.div
+              key={tool.name}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 + i * 0.04 }}
+              style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-full)',
+                padding: '6px 14px',
+                fontSize: 13,
+                display: 'flex',
+                alignItems: 'center',
