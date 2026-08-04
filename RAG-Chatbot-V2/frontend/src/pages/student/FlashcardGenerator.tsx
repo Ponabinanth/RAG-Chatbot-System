@@ -43,3 +43,48 @@ export default function FlashcardGenerator() {
 
   const progress = cards.length > 0 ? (known.size / cards.length) * 100 : 0;
 
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(139,92,246,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🃏</div>
+        <div>
+          <div className="tool-page-title">Flashcard Generator</div>
+          <div className="tool-page-desc">Paste your notes and get smart Q&A cards instantly</div>
+        </div>
+      </div>
+
+      {!generated ? (
+        <div className="card" style={{ maxWidth: 680 }}>
+          <div className="form-group mb-4">
+            <label className="form-label">Paste your study notes</label>
+            <textarea
+              className="form-textarea"
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+              rows={10}
+              placeholder="Paste your notes here… Each sentence/paragraph becomes a flashcard."
+            />
+          </div>
+          <button className="btn btn-primary" onClick={generate}>
+            ✨ Generate Flashcards ({notes.split('\n').filter(l => l.trim().length > 20).length} cards)
+          </button>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24, alignItems: 'center' }}>
+          {/* Progress */}
+          <div style={{ width: '100%', maxWidth: 560 }}>
+            <div className="flex justify-between mb-2" style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+              <span>Card {current + 1} of {cards.length}</span>
+              <span>✅ {known.size} known</span>
+            </div>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+
+          {/* Card */}
+          <div
+            className={`flashcard${flipped ? ' flipped' : ''}`}
+            onClick={() => setFlipped(f => !f)}
+          >
+            <div className="flashcard-inner">
