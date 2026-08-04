@@ -42,3 +42,48 @@ export default function EmailDrafter() {
   const copy = () => {
     navigator.clipboard.writeText(draft);
     setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(245,158,11,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>✉️</div>
+        <div>
+          <div className="tool-page-title">Email Drafter</div>
+          <div className="tool-page-desc">AI-powered professional email generator</div>
+        </div>
+      </div>
+
+      <div className="grid-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="form-group">
+            <label className="form-label">To (Recipient)</label>
+            <input className="form-input" value={to} onChange={e => setTo(e.target.value)} placeholder="recipient@example.com" />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Subject</label>
+            <input className="form-input" value={subject} onChange={e => setSubject(e.target.value)} placeholder="Email subject" />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Purpose</label>
+            <select className="form-select" value={purpose} onChange={e => setPurpose(e.target.value as Purpose)}>
+              <option value="follow-up">📩 Follow-up</option>
+              <option value="introduction">👋 Introduction</option>
+              <option value="proposal">📊 Proposal</option>
+              <option value="complaint">😤 Complaint</option>
+              <option value="thank-you">🙏 Thank You</option>
+              <option value="request">🙋 Request</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Tone</label>
+            <div className="tab-bar">
+              {(['formal', 'friendly', 'assertive', 'apologetic'] as Tone[]).map(t => (
+                <button key={t} className={`tab-item${tone === t ? ' active' : ''}`} onClick={() => setTone(t)} style={{ fontSize: 12, textTransform: 'capitalize' }}>
+                  {t === 'formal' ? '👔' : t === 'friendly' ? '😊' : t === 'assertive' ? '💪' : '🙏'} {t}
+                </button>
+              ))}
