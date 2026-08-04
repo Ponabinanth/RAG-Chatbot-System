@@ -68,3 +68,39 @@ export default function ProAssistant() {
         {QUICK_PROMPTS.map(p => (
           <button key={p} className="btn btn-secondary btn-sm" onClick={() => { setInput(p); }}>
             {p}
+          </button>
+        ))}
+      </div>
+
+      <div className="chat-container">
+        <div className="chat-messages">
+          {messages.map((msg, i) => (
+            <motion.div key={i} className={`chat-message ${msg.role}`} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="chat-avatar" style={{ background: msg.role === 'user' ? 'var(--gradient-brand)' : 'rgba(6,182,212,0.15)' }}>
+                {msg.role === 'user' ? '👤' : '🤖'}
+              </div>
+              <div className="chat-bubble" style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div>
+            </motion.div>
+          ))}
+          {loading && (
+            <div className="chat-message assistant">
+              <div className="chat-avatar" style={{ background: 'rgba(6,182,212,0.15)' }}>🤖</div>
+              <div className="chat-bubble"><div className="typing-dots"><span /><span /><span /></div></div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
+        <div className="chat-input-area">
+          <div className="chat-input-row">
+            <textarea className="chat-input" placeholder={`Ask about ${context}…`} value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
+              rows={1} />
+            <button className="chat-send-btn" onClick={send} disabled={loading || !input.trim()}>➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
