@@ -84,3 +84,47 @@ export default function ExamCountdown() {
         )}
       </AnimatePresence>
 
+      {/* Exam List */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {sorted.length === 0 ? (
+          <div className="empty-state"><span className="empty-state-emoji">📅</span><div className="empty-state-text">No exams added yet. Click "Add Exam" to get started!</div></div>
+        ) : (
+          sorted.map((exam, i) => {
+            const time = getTimeLeft(exam.date);
+            const isPast = !time;
+            const color = time ? getUrgencyColor(time.days) : 'var(--text-muted)';
+            return (
+              <motion.div
+                key={exam.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="exam-item"
+              >
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>{exam.name}</div>
+                  <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                    {exam.subject && <span>{exam.subject} · </span>}
+                    {new Date(exam.date).toLocaleDateString('en', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                  </div>
+                </div>
+                {isPast ? (
+                  <span className="badge" style={{ background: 'rgba(107,114,128,0.15)', color: 'var(--text-muted)' }}>Passed</span>
+                ) : (
+                  <div style={{ textAlign: 'right' }}>
+                    <div className="exam-countdown" style={{ color }}>
+                      {time!.days}d {time!.hours}h {time!.minutes}m
+                    </div>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>remaining</div>
+                  </div>
+                )}
+                <button className="btn btn-ghost btn-sm" onClick={() => setExams(prev => prev.filter(e => e.id !== exam.id))} style={{ color: 'var(--text-muted)' }}>✕</button>
+              </motion.div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}
+
