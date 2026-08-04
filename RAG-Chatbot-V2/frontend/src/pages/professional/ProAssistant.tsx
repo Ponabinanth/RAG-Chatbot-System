@@ -33,3 +33,38 @@ export default function ProAssistant() {
       if (isRealAiAvailable) {
         const sysPrompt = `You are a highly capable Professional AI Assistant acting as an expert consultant in ${context}. The user needs your advice or help. Be professional, concise, and insightful.`;
         const aiResponse = await generateAiResponse(sysPrompt, msg);
+        setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+        setLoading(false);
+      } else {
+        setTimeout(() => {
+          const resp = SAMPLE_RESPONSES[context] || SAMPLE_RESPONSES.General;
+          setMessages(prev => [...prev, { role: 'assistant', content: `*(⚠️ Demo Mode: Add Gemini API key to .env for real AI responses)*\n\n${resp}` }]);
+          setLoading(false);
+        }, 1400);
+      }
+    } catch (err: any) {
+      setMessages(prev => [...prev, { role: 'assistant', content: `⚠️ **Error connecting to AI:** ${err.message}` }]);
+      setLoading(false);
+    }
+  };
+
+  const QUICK_PROMPTS = ['Summarize key points', 'Write an executive summary', 'Identify risks', 'Suggest next steps'];
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(108,99,255,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🤖</div>
+        <div>
+          <div className="tool-page-title">Professional AI Assistant</div>
+          <div className="tool-page-desc">Your intelligent work companion for every challenge</div>
+        </div>
+        <select className="form-select" style={{ marginLeft: 'auto', width: 160 }} value={context} onChange={e => setContext(e.target.value)}>
+          {CONTEXTS.map(c => <option key={c}>{c}</option>)}
+        </select>
+      </div>
+
+      {/* Quick Prompts */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+        {QUICK_PROMPTS.map(p => (
+          <button key={p} className="btn btn-secondary btn-sm" onClick={() => { setInput(p); }}>
+            {p}
