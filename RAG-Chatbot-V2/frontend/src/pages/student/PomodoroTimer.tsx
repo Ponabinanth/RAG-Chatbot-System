@@ -44,3 +44,49 @@ export default function PomodoroTimer() {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [running, phase]);
 
+  const reset = () => { setRunning(false); setTimeLeft(PHASES[phase].duration); };
+
+  const mm = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+  const ss = String(timeLeft % 60).padStart(2, '0');
+  const progress = 1 - timeLeft / PHASES[phase].duration;
+  const circumference = 2 * Math.PI * 88;
+  const phaseColor = PHASES[phase].color;
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(239,68,68,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>⏱️</div>
+        <div>
+          <div className="tool-page-title">Pomodoro Timer</div>
+          <div className="tool-page-desc">25-minute focus sessions for maximum productivity</div>
+        </div>
+      </div>
+
+      {/* Phase Selector */}
+      <div className="tab-bar mb-6" style={{ maxWidth: 400 }}>
+        {(Object.keys(PHASES) as Phase[]).map(p => (
+          <button key={p} className={`tab-item${phase === p ? ' active' : ''}`} onClick={() => setPhase(p)}>
+            {PHASES[p].label}
+          </button>
+        ))}
+      </div>
+
+      <div className="pomodoro-wrap">
+        {/* Timer Ring */}
+        <div className="pomodoro-ring-wrap">
+          <svg className="pomodoro-ring-svg" width="220" height="220" viewBox="0 0 220 220">
+            <defs>
+              <linearGradient id="timerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor={phaseColor} />
+                <stop offset="100%" stopColor="#8b5cf6" />
+              </linearGradient>
+            </defs>
+            <circle className="pomodoro-ring-bg" cx="110" cy="110" r="88" />
+            <circle
+              className="pomodoro-ring-progress"
+              cx="110" cy="110" r="88"
+              strokeDasharray={circumference}
+              strokeDashoffset={circumference * (1 - progress)}
+            />
+          </svg>
+          <div className="pomodoro-time">
