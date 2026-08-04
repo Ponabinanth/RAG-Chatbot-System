@@ -51,3 +51,57 @@ export default function GPACalculator() {
   const addCourse = () => setCourses(prev => [...prev, { name: '', grade: 'A', credits: '3' }]);
   const removeCourse = (i: number) => setCourses(prev => prev.filter((_, idx) => idx !== i));
 
+  const gpa = calcGPA(courses);
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(16,185,129,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>📊</div>
+        <div>
+          <div className="tool-page-title">GPA Calculator</div>
+          <div className="tool-page-desc">Calculate your weighted GPA instantly</div>
+        </div>
+      </div>
+
+      <div className="grid-2">
+        {/* Table */}
+        <div className="card">
+          <div className="section-title mb-4">📝 Your Courses</div>
+          <table className="gpa-table">
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Grade</th>
+                <th>Credits</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.map((c, i) => (
+                <tr key={i}>
+                  <td>
+                    <input
+                      className="form-input"
+                      value={c.name}
+                      onChange={e => updateCourse(i, 'name', e.target.value)}
+                      placeholder="Course name"
+                      style={{ padding: '6px 10px', fontSize: 13 }}
+                    />
+                  </td>
+                  <td>
+                    <select className="form-select" value={c.grade} onChange={e => updateCourse(i, 'grade', e.target.value)}
+                      style={{ padding: '6px 10px', fontSize: 13 }}>
+                      {Object.keys(GRADE_POINTS).map(g => <option key={g}>{g}</option>)}
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      className="form-input"
+                      type="number"
+                      value={c.credits}
+                      onChange={e => updateCourse(i, 'credits', e.target.value)}
+                      min="1" max="6"
+                      style={{ padding: '6px 10px', fontSize: 13, width: 70 }}
+                    />
+                  </td>
+                  <td>
