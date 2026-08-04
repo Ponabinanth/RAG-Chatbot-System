@@ -44,3 +44,49 @@ export default function StoryCreator() {
   };
 
   const continueStory = () => {
+    if (!chosen || loading) return;
+    setLoading(true);
+    const continuations = CONTINUATIONS[chosen.emoji] || [];
+    const nextIndex = parts.length - 1;
+    setTimeout(() => {
+      if (nextIndex < continuations.length) {
+        setParts(p => [...p, continuations[nextIndex]]);
+        if (nextIndex >= continuations.length - 1) setDone(true);
+      }
+      setLoading(false);
+    }, 1500);
+  };
+
+  const reset = () => { setChosen(null); setParts([]); setDone(false); };
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(139,92,246,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>📚</div>
+        <div>
+          <div className="tool-page-title">Story Creator</div>
+          <div className="tool-page-desc">Build magical stories — choose a theme and let the adventure begin!</div>
+        </div>
+        {chosen && <button className="btn btn-ghost btn-sm" style={{ marginLeft: 'auto' }} onClick={reset}>← New Story</button>}
+      </div>
+
+      {!chosen ? (
+        <div>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: 24, fontSize: 15 }}>✨ Choose a story theme to begin your adventure:</p>
+          <div className="grid-2">
+            {STORY_STARTERS.map((s, i) => (
+              <motion.div
+                key={s.theme}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="tool-card"
+                onClick={() => start(s)}
+              >
+                <div style={{ fontSize: 52, marginBottom: 8 }}>{s.emoji}</div>
+                <div className="tool-card-title">{s.theme} Adventure</div>
+                <div className="tool-card-desc" style={{ fontSize: 13, lineHeight: 1.5 }}>
+                  {s.starter.slice(0, 80)}…
+                </div>
+                <div className="tool-card-badge" style={{ background: 'rgba(139,92,246,0.1)', color: '#8b5cf6' }}>
+                  Start Story →
