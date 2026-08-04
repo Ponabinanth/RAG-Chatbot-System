@@ -42,3 +42,47 @@ export default function OnboardingPage() {
     setLoading(true);
     setError('');
     try {
+      await updateRole(selected, name.trim());
+      navigate('/dashboard', { replace: true });
+    } catch (e: any) {
+      // Even if DB fails (no Supabase configured), redirect anyway
+      navigate('/dashboard', { replace: true });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="onboarding-page">
+      <motion.div
+        className="onboarding-wrap"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="onboarding-header">
+          <div style={{ fontSize: 48, marginBottom: 16 }}>👋</div>
+          <h1>Welcome to EduPro Hub!</h1>
+          <p>Tell us about yourself so we can personalise your experience.</p>
+        </div>
+
+        {/* Name Input */}
+        <div className="form-group mb-6">
+          <label className="form-label">Your Name</label>
+          <input
+            type="text"
+            className="form-input"
+            placeholder="What should we call you?"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            style={{ maxWidth: 400, margin: '0 auto', display: 'block' }}
+          />
+        </div>
+
+        <p style={{ textAlign: 'center', fontSize: 14, color: 'var(--text-secondary)', marginBottom: 24, fontWeight: 600 }}>
+          I am a…
+        </p>
+
+        <div className="role-picker">
+          {ROLES.map((role, i) => (
+            <motion.div
