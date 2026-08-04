@@ -62,3 +62,68 @@ export default function InvoiceCalculator() {
               </div>
               <div className="form-group">
                 <label className="form-label">Client Name</label>
+                <input className="form-input" value={client} onChange={e => setClient(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Issue Date</label>
+                <input className="form-input" type="date" value={date} onChange={e => setDate(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Due Date</label>
+                <input className="form-input" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Tax Rate (%)</label>
+                <input className="form-input" type="number" value={taxRate} onChange={e => setTaxRate(e.target.value)} min="0" max="100" />
+              </div>
+            </div>
+          </div>
+
+          {/* Line Items */}
+          <div className="card">
+            <div className="flex justify-between items-center mb-4">
+              <div className="section-title" style={{ margin: 0 }}>📋 Line Items</div>
+              <button className="btn btn-secondary btn-sm" onClick={addItem}>+ Add Row</button>
+            </div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr>
+                  {['Description', 'Qty/Hrs', 'Rate', 'Total', ''].map(h => (
+                    <th key={h} style={{ fontSize: 11, fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', padding: '6px 8px', textAlign: 'left', borderBottom: '1px solid var(--border-subtle)' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item, i) => {
+                  const lineTotal = (parseFloat(item.qty) || 0) * (parseFloat(item.rate) || 0);
+                  return (
+                    <tr key={i}>
+                      <td style={{ padding: '8px 4px' }}>
+                        <input className="form-input" value={item.description} onChange={e => updateItem(i, 'description', e.target.value)} placeholder="Description" style={{ fontSize: 13, padding: '6px 8px' }} />
+                      </td>
+                      <td style={{ padding: '8px 4px', width: 70 }}>
+                        <input className="form-input" type="number" value={item.qty} onChange={e => updateItem(i, 'qty', e.target.value)} style={{ fontSize: 13, padding: '6px 8px', width: 70 }} />
+                      </td>
+                      <td style={{ padding: '8px 4px', width: 90 }}>
+                        <input className="form-input" type="number" value={item.rate} onChange={e => updateItem(i, 'rate', e.target.value)} style={{ fontSize: 13, padding: '6px 8px', width: 90 }} />
+                      </td>
+                      <td style={{ padding: '8px 4px', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{fmt(lineTotal)}</td>
+                      <td style={{ padding: '8px 4px' }}>
+                        <button className="btn btn-ghost btn-sm" onClick={() => removeItem(i)} style={{ color: 'var(--text-muted)', padding: '4px 8px' }}>✕</button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            <div className="form-group" style={{ marginTop: 16 }}>
+              <label className="form-label">Notes</label>
+              <textarea className="form-textarea" value={notes} onChange={e => setNotes(e.target.value)} rows={2} />
+            </div>
+          </div>
+        </div>
+
+        {/* Invoice Preview */}
+        <div>
+          <div className="card" style={{ background: 'white', color: '#111', padding: 32 }}>
