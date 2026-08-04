@@ -56,3 +56,61 @@ export default function ABCLearning() {
     setQuizInput('');
     setQuizResult(null);
   };
+
+  return (
+    <div className="animate-fade-in">
+      <div className="tool-page-header">
+        <div style={{ background: 'rgba(16,185,129,0.1)', width: 52, height: 52, borderRadius: 'var(--radius-lg)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26 }}>🔤</div>
+        <div>
+          <div className="tool-page-title">ABC Learning</div>
+          <div className="tool-page-desc">Learn letters, words, and sounds! 🌟</div>
+        </div>
+        <div className="tab-bar" style={{ marginLeft: 'auto' }}>
+          <button className={`tab-item${mode === 'browse' ? ' active' : ''}`} onClick={() => setMode('browse')}>📚 Browse</button>
+          <button className={`tab-item${mode === 'quiz' ? ' active' : ''}`} onClick={() => setMode('quiz')}>🎯 Quiz</button>
+        </div>
+      </div>
+
+      {mode === 'browse' ? (
+        <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
+          {/* Letter Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(52px, 1fr))', gap: 8, maxWidth: 380 }}>
+            {ALPHABET.map(item => (
+              <motion.button
+                key={item.letter}
+                onClick={() => setSelected(item)}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
+                style={{
+                  width: 52, height: 52,
+                  borderRadius: 10,
+                  border: `2px solid ${selected.letter === item.letter ? 'var(--brand-primary)' : 'var(--border-subtle)'}`,
+                  background: selected.letter === item.letter ? 'var(--role-student-light)' : 'var(--bg-card)',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: 22,
+                  fontWeight: 800,
+                  color: selected.letter === item.letter ? 'var(--brand-primary-light)' : 'var(--text-primary)',
+                  cursor: 'pointer',
+                }}
+              >
+                {item.letter}
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Selected Letter Card */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selected.letter}
+              initial={{ opacity: 0, x: 20, scale: 0.9 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -20 }}
+              style={{ flex: 1, minWidth: 260 }}
+            >
+              <div className="abc-card">
+                <div className="abc-letter">{selected.letter}</div>
+                <div style={{ fontSize: 64, marginBottom: 8 }}>{selected.emoji}</div>
+                <div className="abc-word">{selected.word}</div>
+                <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.7)', marginTop: 8 }}>
+                  Sound: "{selected.sound}"
+                </div>
