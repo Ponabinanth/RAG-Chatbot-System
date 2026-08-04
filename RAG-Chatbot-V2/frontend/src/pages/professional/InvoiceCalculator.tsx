@@ -127,3 +127,68 @@ export default function InvoiceCalculator() {
         {/* Invoice Preview */}
         <div>
           <div className="card" style={{ background: 'white', color: '#111', padding: 32 }}>
+            {/* Header */}
+            <div className="flex justify-between items-center" style={{ marginBottom: 32 }}>
+              <div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 900, color: '#6c63ff' }}>INVOICE</div>
+                <div style={{ fontSize: 13, color: '#666', marginTop: 4 }}>{invoiceNo}</div>
+              </div>
+              <div style={{ textAlign: 'right', fontSize: 13, color: '#444' }}>
+                <div style={{ fontWeight: 700 }}>Issued: {new Date(date).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+                <div style={{ color: '#f87171', fontWeight: 600 }}>Due: {new Date(dueDate).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 24, fontSize: 13, color: '#444' }}>
+              <div style={{ fontWeight: 700, marginBottom: 4 }}>Bill To:</div>
+              <div style={{ fontWeight: 600, fontSize: 15, color: '#111' }}>{client}</div>
+            </div>
+
+            {/* Items */}
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginBottom: 24 }}>
+              <thead>
+                <tr style={{ background: '#f5f5f5' }}>
+                  {['Description', 'Qty', 'Rate', 'Amount'].map(h => (
+                    <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: 12, fontWeight: 700, color: '#555', textTransform: 'uppercase' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                    <td style={{ padding: '10px 12px', fontSize: 13 }}>{item.description || '—'}</td>
+                    <td style={{ padding: '10px 12px', fontSize: 13 }}>{item.qty}</td>
+                    <td style={{ padding: '10px 12px', fontSize: 13 }}>{fmt(parseFloat(item.rate) || 0)}</td>
+                    <td style={{ padding: '10px 12px', fontSize: 13, fontWeight: 600 }}>{fmt((parseFloat(item.qty) || 0) * (parseFloat(item.rate) || 0))}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Totals */}
+            <div style={{ borderTop: '2px solid #eee', paddingTop: 16 }}>
+              {[['Subtotal', fmt(subtotal)], [`Tax (${taxRate}%)`, fmt(tax)]].map(([label, val]) => (
+                <div key={label} className="flex justify-between" style={{ fontSize: 13, color: '#555', marginBottom: 8 }}>
+                  <span>{label}</span><span>{val}</span>
+                </div>
+              ))}
+              <div className="flex justify-between" style={{ borderTop: '2px solid #111', paddingTop: 12, marginTop: 8 }}>
+                <span style={{ fontWeight: 800, fontSize: 16 }}>TOTAL</span>
+                <motion.span animate={{ scale: [1, 1.05, 1] }} key={total} className="invoice-total" style={{ color: '#6c63ff', fontSize: 24 }}>
+                  {fmt(total)}
+                </motion.span>
+              </div>
+            </div>
+
+            {notes && (
+              <div style={{ marginTop: 20, padding: '12px 16px', background: '#f9f9f9', borderRadius: 8, fontSize: 12, color: '#666', borderLeft: '3px solid #6c63ff' }}>
+                {notes}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
