@@ -88,3 +88,48 @@ export default function MathPlayground() {
         <div className="stat-card" style={{ textAlign: 'center' }}>
           <div className="stat-label">Total</div>
           <div className="math-score" style={{ fontSize: 32 }}>{total}</div>
+        </div>
+        <div className="stat-card" style={{ textAlign: 'center' }}>
+          <div className="stat-label">🔥 Streak</div>
+          <div className="math-score" style={{ fontSize: 32, color: streak >= 3 ? '#f59e0b' : 'var(--text-primary)' }}>{streak}</div>
+        </div>
+      </div>
+
+      <div className="math-wrap">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${q.a}${q.op}${q.b}`}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.1 }}
+          >
+            <div className="math-question">
+              {q.a} {q.op} {q.b} = ?
+            </div>
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="math-options">
+          {q.options.map(opt => (
+            <motion.button
+              key={opt}
+              className={`math-option${selected !== null ? (opt === q.answer ? ' correct' : selected === opt ? ' wrong' : '') : ''}`}
+              onClick={() => answer(opt)}
+              whileHover={selected === null ? { scale: 1.05 } : {}}
+              whileTap={selected === null ? { scale: 0.95 } : {}}
+            >
+              {opt}
+            </motion.button>
+          ))}
+        </div>
+
+        {streak >= 3 && (
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} style={{ fontSize: 24, textAlign: 'center', marginTop: 16 }}>
+            🔥 {streak} in a row! Amazing!
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
+
