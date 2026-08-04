@@ -101,3 +101,55 @@ export default function TimeTracker() {
               <div className="stat-label">Today Total</div>
               <div className="stat-value" style={{ fontSize: 24 }}>{hours}h {minutes}m</div>
             </div>
+            <div className="stat-card">
+              <div className="stat-label">Sessions</div>
+              <div className="stat-value" style={{ fontSize: 24 }}>{logs.length}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Log */}
+        <div>
+          <div className="section-title">📊 Project Breakdown</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+            {Object.entries(projectGroups).map(([proj, mins]) => (
+              <div key={proj} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 4 }}>{proj}</div>
+                  <div className="progress-bar">
+                    <div className="progress-fill" style={{ width: `${(mins / totalMinutes) * 100}%` }} />
+                  </div>
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--brand-primary-light)', flexShrink: 0 }}>
+                  {Math.floor(mins / 60)}h {mins % 60}m
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="section-title">📝 Session Log</div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {logs.map(log => (
+              <div key={log.id} className="flex items-center justify-between" style={{
+                padding: '12px 16px',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border-subtle)',
+                borderRadius: 'var(--radius-md)',
+                fontSize: 13,
+              }}>
+                <div>
+                  <div style={{ fontWeight: 600 }}>{log.project}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: 11 }}>{log.date}</div>
+                </div>
+                <div style={{ fontWeight: 700, color: 'var(--brand-primary-light)' }}>
+                  {log.duration >= 60 ? `${Math.floor(log.duration / 60)}h ${log.duration % 60}m` : `${log.duration}m`}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
