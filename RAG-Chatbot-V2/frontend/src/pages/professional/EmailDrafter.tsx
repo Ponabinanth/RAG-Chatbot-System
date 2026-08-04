@@ -87,3 +87,48 @@ export default function EmailDrafter() {
                   {t === 'formal' ? '👔' : t === 'friendly' ? '😊' : t === 'assertive' ? '💪' : '🙏'} {t}
                 </button>
               ))}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Additional Context (optional)</label>
+            <textarea className="form-textarea" value={context} onChange={e => setContext(e.target.value)}
+              placeholder="Provide context: project name, specific details, deadlines…" rows={4} />
+          </div>
+
+          <button className="btn btn-primary" onClick={generate} disabled={loading}>
+            {loading ? <><span className="spinner" /> Drafting…</> : '✨ Generate Email Draft'}
+          </button>
+        </div>
+
+        <div>
+          {draft ? (
+            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
+              <div className="flex justify-between items-center mb-4">
+                <div className="section-title" style={{ margin: 0 }}>📧 Email Draft</div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button className="btn btn-secondary btn-sm" onClick={copy}>
+                    {copied ? '✓ Copied!' : '📋 Copy'}
+                  </button>
+                </div>
+              </div>
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 4 }}>To: {to}</div>
+                {subject && <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Subject: {subject}</div>}
+              </div>
+              <div className="email-preview">{draft}</div>
+            </motion.div>
+          ) : (
+            <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>✉️</div>
+              <div style={{ color: 'var(--text-muted)', fontSize: 14, textAlign: 'center' }}>
+                Fill in the details on the left and generate your perfect email
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
