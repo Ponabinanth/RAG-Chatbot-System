@@ -47,3 +47,52 @@ function ToolCard({ tool, delay = 0 }: { tool: typeof STUDENT_TOOLS[0]; delay?: 
       </Link>
     </motion.div>
   );
+}
+
+export default function Dashboard() {
+  const { user, profile } = useAuth();
+  const displayName = profile?.display_name || user?.email?.split('@')[0] || 'there';
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+
+  const tools = profile?.role === 'student' ? STUDENT_TOOLS
+    : profile?.role === 'child' ? CHILD_TOOLS
+    : PRO_TOOLS;
+
+  const roleEmoji = profile?.role === 'student' ? '🎓' : profile?.role === 'child' ? '👶' : '💼';
+  const quickTip = profile?.role === 'student'
+    ? 'Pro tip: Use Pomodoro + Flashcards for maximum retention!'
+    : profile?.role === 'child'
+    ? 'Ready to play and learn today? 🌟'
+    : 'Boost your productivity with AI-powered tools!';
+
+  return (
+    <div className="animate-fade-in">
+      {/* Header */}
+      <div className="dashboard-header">
+        <div className="dashboard-greeting">
+          {roleEmoji} {greeting}, {displayName}!
+        </div>
+        <div className="dashboard-sub">{quickTip}</div>
+      </div>
+
+      {/* Stats */}
+      <div className="dashboard-stats">
+        <div className="stat-card">
+          <div className="stat-label">Available Tools</div>
+          <div className="stat-value">{tools.length}</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Your Role</div>
+          <div className="stat-value" style={{ fontSize: 20, textTransform: 'capitalize' }}>
+            {profile?.role || '—'}
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Today</div>
+          <div className="stat-value" style={{ fontSize: 20 }}>
+            {new Date().toLocaleDateString('en', { weekday: 'short', day: 'numeric', month: 'short' })}
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-label">Status</div>
