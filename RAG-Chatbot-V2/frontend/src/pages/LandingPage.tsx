@@ -109,3 +109,59 @@ export default function LandingPage() {
                 fontSize: 13,
                 display: 'flex',
                 alignItems: 'center',
+                gap: 6,
+                color: 'var(--text-secondary)',
+              }}
+            >
+              {tool.emoji} {tool.name}
+            </motion.div>
+          ))}
+        </motion.div>
+      </div>
+
+      {/* Feature Cards */}
+      <section id="features">
+        <div className="landing-grid">
+          {FEATURES.map((f, i) => (
+            <motion.div
+              key={f.title}
+              className="role-card"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <div style={{
+                width: 60, height: 60,
+                borderRadius: 'var(--radius-lg)',
+                background: f.bg,
+                border: `1px solid ${f.color}33`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 28,
+                marginBottom: 16,
+              }}>
+                {f.icon}
+              </div>
+              <div className="role-card-title" style={{ color: f.color }}>{f.title}</div>
+              <div className="role-card-desc">{f.desc}</div>
+              <Link to="/auth" className="btn btn-secondary btn-sm" style={{ marginTop: 16 }}>
+                Get started →
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer style={{ textAlign: 'center', padding: '40px 24px', borderTop: '1px solid var(--border-subtle)', color: 'var(--text-muted)', fontSize: 13 }}>
+        <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, marginBottom: 8, color: 'var(--text-primary)' }}>
+          🧠 EduPro Hub
+        </div>
+        Built with ❤️ for learners of all ages · {new Date().getFullYear()}
+      </footer>
+    </div>
+  );
+}
+
