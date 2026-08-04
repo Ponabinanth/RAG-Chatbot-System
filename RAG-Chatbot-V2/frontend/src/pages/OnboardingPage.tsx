@@ -86,3 +86,47 @@ export default function OnboardingPage() {
         <div className="role-picker">
           {ROLES.map((role, i) => (
             <motion.div
+              key={role.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className={`role-option${selected === role.id ? ' selected' : ''}`}
+              onClick={() => setSelected(role.id)}
+            >
+              <span className="role-option-emoji">{role.emoji}</span>
+              <div className="role-option-label">{role.label}</div>
+              <div className="role-option-desc">{role.desc}</div>
+              <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {role.features.map(f => (
+                  <div key={f} className="feature-item" style={{ justifyContent: 'center' }}>
+                    <div className="feature-dot" style={{ background: selected === role.id ? 'var(--brand-primary)' : 'var(--text-muted)' }} />
+                    <span style={{ fontSize: 12 }}>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <AnimatePresence>
+          {error && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="auth-error mb-4">
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div style={{ textAlign: 'center', marginTop: 8 }}>
+          <button
+            className="btn btn-primary btn-lg"
+            onClick={handleContinue}
+            disabled={!selected || loading}
+          >
+            {loading ? <><span className="spinner" /> Setting up…</> : 'Continue to Dashboard →'}
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
