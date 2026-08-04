@@ -108,3 +108,59 @@ export default function TaskManager() {
                 <span className="kanban-col-count">{colTasks.length}</span>
               </div>
               <AnimatePresence>
+                {colTasks.map(task => (
+                  <motion.div
+                    key={task.id}
+                    layout
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="kanban-item"
+                  >
+                    <div className="kanban-item-title">{task.title}</div>
+                    <div className="kanban-item-meta">
+                      <span className={`priority-badge ${priorityColors[task.priority]}`}>{task.priority}</span>
+                      {task.due && <span>📅 {new Date(task.due).toLocaleDateString('en', { month: 'short', day: 'numeric' })}</span>}
+                    </div>
+                    {/* Move Buttons */}
+                    <div style={{ display: 'flex', gap: 4, marginTop: 8 }}>
+                      {COLUMNS.filter(c => c.id !== col.id).map(c => (
+                        <button key={c.id} className="btn btn-ghost btn-sm" style={{ fontSize: 11, padding: '3px 8px', color: c.color }}
+                          onClick={() => moveTask(task.id, c.id)}>
+                          → {c.label}
+                        </button>
+                      ))}
+                      <button className="btn btn-ghost btn-sm" style={{ fontSize: 11, color: 'var(--text-muted)', marginLeft: 'auto' }}
+                        onClick={() => deleteTask(task.id)}>✕</button>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+              {colTasks.length === 0 && (
+                <div className="empty-state" style={{ padding: '24px 12px' }}>
+                  <div style={{ fontSize: 24 }}>📭</div>
+                  <div style={{ fontSize: 12, marginTop: 6 }}>No tasks</div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Summary */}
+      <div className="dashboard-stats" style={{ marginTop: 24 }}>
+        {COLUMNS.map(col => (
+          <div key={col.id} className="stat-card" style={{ textAlign: 'center' }}>
+            <div className="stat-label">{col.label}</div>
+            <div className="stat-value" style={{ color: col.color }}>{tasks.filter(t => t.status === col.id).length}</div>
+          </div>
+        ))}
+        <div className="stat-card" style={{ textAlign: 'center' }}>
+          <div className="stat-label">Total</div>
+          <div className="stat-value">{tasks.length}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
