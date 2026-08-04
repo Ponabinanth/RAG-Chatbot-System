@@ -86,3 +86,48 @@ export default function CitationGenerator() {
             { key: 'author', label: 'Author(s)', placeholder: 'Last, First (or First Last)' },
             { key: 'title', label: 'Title', placeholder: 'Title of the work' },
             { key: 'year', label: 'Year', placeholder: '2023' },
+            ...(form.type === 'book' ? [{ key: 'publisher', label: 'Publisher', placeholder: 'Publisher name' }] : []),
+            ...(form.type === 'website' ? [{ key: 'url', label: 'URL', placeholder: 'https://...' }] : []),
+            ...(form.type === 'journal' ? [
+              { key: 'journal', label: 'Journal Name', placeholder: 'Journal of Science' },
+              { key: 'volume', label: 'Volume', placeholder: '12' },
+              { key: 'issue', label: 'Issue', placeholder: '3' },
+              { key: 'pages', label: 'Pages', placeholder: '45–67' },
+            ] : []),
+          ].map(({ key, label, placeholder }) => (
+            <div className="form-group" key={key}>
+              <label className="form-label">{label}</label>
+              <input className="form-input" value={(form as any)[key]} onChange={e => update(key as any, e.target.value)} placeholder={placeholder} />
+            </div>
+          ))}
+        </div>
+
+        {/* Output */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="card">
+            <div className="flex justify-between items-center mb-4">
+              <div className="section-title" style={{ margin: 0 }}>Generated Citation</div>
+              <span className="badge badge-student">{style}</span>
+            </div>
+            <div className="citation-output">
+              {citation.replace(/\*/g, '')}
+            </div>
+            <button className="btn btn-primary btn-sm" style={{ marginTop: 12 }} onClick={copy}>
+              {copied ? '✓ Copied!' : '📋 Copy Citation'}
+            </button>
+          </div>
+
+          <div className="card" style={{ background: 'rgba(108,99,255,0.05)', borderColor: 'rgba(108,99,255,0.15)' }}>
+            <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              <strong>💡 Citation Tips:</strong>
+              <br />• APA: Used in psychology, social sciences
+              <br />• MLA: Used in humanities, literature
+              <br />• Chicago: Used in history, fine arts
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
