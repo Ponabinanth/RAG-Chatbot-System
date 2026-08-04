@@ -88,3 +88,48 @@ export default function FlashcardGenerator() {
             onClick={() => setFlipped(f => !f)}
           >
             <div className="flashcard-inner">
+              <div className="flashcard-face">
+                <div className="flashcard-label">Question — Click to reveal</div>
+                <div className="flashcard-content">{cards[current]?.question}</div>
+              </div>
+              <div className="flashcard-face flashcard-back">
+                <div className="flashcard-label" style={{ color: 'var(--brand-primary-light)' }}>Answer</div>
+                <div className="flashcard-content" style={{ fontSize: 16 }}>{cards[current]?.answer}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Controls */}
+          <div style={{ display: 'flex', gap: 12 }}>
+            <button className="btn btn-danger" onClick={() => next(false)}>
+              ✗ Still learning
+            </button>
+            <button className="btn btn-primary" onClick={() => next(true)}>
+              ✓ Got it!
+            </button>
+          </div>
+
+          <button className="btn btn-ghost btn-sm" onClick={() => setGenerated(false)}>
+            ← Back to notes
+          </button>
+
+          {known.size === cards.length && (
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="card"
+              style={{ textAlign: 'center', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)', maxWidth: 400 }}
+            >
+              <div style={{ fontSize: 48, marginBottom: 8 }}>🎉</div>
+              <div style={{ fontWeight: 700, color: '#34d399' }}>You've mastered all cards!</div>
+              <button className="btn btn-secondary btn-sm" style={{ marginTop: 12 }} onClick={() => { setKnown(new Set()); setCurrent(0); }}>
+                Review again
+              </button>
+            </motion.div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
