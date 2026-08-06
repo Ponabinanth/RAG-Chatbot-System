@@ -23,7 +23,7 @@ export default function ProAssistant() {
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages]);
 
-  const send = () => {
+  const send = async () => {
     if (!input.trim() || loading) return;
     const msg = input.trim();
     setInput('');
