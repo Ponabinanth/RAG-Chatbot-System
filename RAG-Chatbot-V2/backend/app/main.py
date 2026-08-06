@@ -43,37 +43,34 @@ auth_router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 @auth_router.post("/register", response_model=UserResponse)
-async def register(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).where(User.email == user.email))
-    if result.scalar_one_or_none():
+async def register(user: UserCreate):
+    from app.json_db import get_user_by_email, create_user
+    if get_user_by_email(user.email):
         raise HTTPException(status_code=400, detail="Email already registered")
 
     hashed_password = get_password_hash(user.password)
-    db_user = User(email=user.email, hashed_password=hashed_password)
-    db.add(db_user)
-    await db.commit()
-    await db.refresh(db_user)
-    return db_user
+    new_user = create_user(user.email, hashed_password)
+    return new_user
 
 
 @auth_router.post("/login", response_model=Token)
-async def login(user: UserCreate, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).where(User.email == user.email))
-    db_user = result.scalar_one_or_none()
-    if not db_user or not verify_password(user.password, db_user.hashed_password):
+async def login(user: UserCreate):
+    from app.json_db import get_user_by_email
+    user_dict = get_user_by_email(user.email)
+    
+    if not user_dict or not verify_password(user.password, user_dict["hashed_password"]):
         raise HTTPException(status_code=401, detail="Incorrect email or password")
 
     access_token_expires = datetime.timedelta(minutes=settings.access_token_expire_minutes)
     access_token = create_access_token(
-        data={"sub": db_user.email}, expires_delta=access_token_expires
+        data={"sub": user_dict["email"]}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @auth_router.get("/me", response_model=UserResponse)
-async def get_me(current_user: User = Depends(get_current_user)):
+async def get_me(current_user = Depends(get_current_user)):
     return current_user
-
 
 # ─── Register Routers ─────────────────────────────────────────────────────────
 
