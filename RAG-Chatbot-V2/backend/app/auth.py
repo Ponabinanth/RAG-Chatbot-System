@@ -1,26 +1,24 @@
 from datetime import datetime, timedelta, timezone
-from passlib.context import CryptContext
+import bcrypt
 import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-
 from app.config import settings
-from app.database import get_db
-from app.models import User
-from app.schemas import Token
+from app.json_db import get_user_by_email
+from pydantic import BaseModel
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto", bcrypt__rounds=12)
+class CurrentUser(BaseModel):
+    id: int
+    email: str
+    created_at: str
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
 def verify_password(plain_password, hashed_password):
-    # Truncate to 72 bytes — bcrypt's max — for passlib/bcrypt compatibility
-    return pwd_context.verify(plain_password[:72], hashed_password)
+    return bcrypt.checkpw(plain_password[:72].encode('utf-8'), hashed_password.encode('utf-8'))
 
 def get_password_hash(password):
-    # Truncate to 72 bytes — bcrypt's max
-    return pwd_context.hash(password[:72])
+    return bcrypt.hashpw(password[:72].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -32,7 +30,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
     return encoded_jwt
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
+async def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -46,8 +44,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
     except jwt.InvalidTokenError:
         raise credentials_exception
     
-    result = await db.execute(select(User).where(User.email == email))
-    user = result.scalar_one_or_none()
-    if user is None:
+    user_dict = get_user_by_email(email)
+    if user_dict is None:
         raise credentials_exception
-    return user
+    return CurrentUser(id=user_dict["id"], email=user_dict["email"], created_at=user_dict["created_at"])
