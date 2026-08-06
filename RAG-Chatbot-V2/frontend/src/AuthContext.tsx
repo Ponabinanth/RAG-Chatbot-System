@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase, isSupabaseConfigured, type UserRole, type Profile } from './supabaseClient';
 import type { User, Session } from '@supabase/supabase-js';
+import { apiRegister, apiLogin, apiGetMe } from './api';
 
 // ─── Mock Auth Types ──────────────────────────────────────────────────────────
 interface MockUser {
@@ -103,29 +104,46 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   // ── Mock auth methods ────────────────────────────────────────────────────
-  async function mockSignUp(email: string, password: string, _displayName: string) {
-    const accounts = getMockAccounts();
-    if (accounts[email]) throw new Error('An account with this email already exists.');
-    accounts[email] = password;
-    saveMockAccounts(accounts);
-    const mockUser: MockUser = { id: `mock-${Date.now()}`, email };
+  async function mockSignUp(email: string, password: string, displayName: string) {
+    await apiRegister(email, password);
+    // Auto-login after registration
+    const data = await apiLogin(email, password);
+    localStorage.setItem('token', data.access_token);
+    
+    // Fetch user details
+    const userData = await apiGetMe(data.access_token);
+    const mockUser: MockUser = { id: userData.id.toString(), email: userData.email };
     saveMockUser(mockUser);
     setUser(mockUser);
+    
+    // Set default role if needed
+    const p: Profile = {
+      id: mockUser.id,
+      role: 'student',
+      display_name: displayName,
+      created_at: new Date().toISOString(),
+    };
+    saveMockProfile(p);
+    setProfile(p);
   }
 
   async function mockSignIn(email: string, password: string) {
-    const accounts = getMockAccounts();
-    if (!accounts[email]) throw new Error('No account found with this email. Please sign up first.');
-    if (accounts[email] !== password) throw new Error('Incorrect password. Please try again.');
-    const mockUser: MockUser = { id: `mock-${email}`, email };
+    const data = await apiLogin(email, password);
+    localStorage.setItem('token', data.access_token);
+    
+    // Fetch user details
+    const userData = await apiGetMe(data.access_token);
+    const mockUser: MockUser = { id: userData.id.toString(), email: userData.email };
     saveMockUser(mockUser);
     setUser(mockUser);
+    
     // Restore profile if exists
     const p = loadMockProfile();
     if (p) setProfile(p);
   }
 
   async function mockSignOut() {
+    localStorage.removeItem('token');
     saveMockUser(null);
     setUser(null);
     setProfile(null);
